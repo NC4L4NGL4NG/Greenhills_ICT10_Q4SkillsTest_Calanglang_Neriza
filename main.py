@@ -7,30 +7,21 @@ absence_counts = np.array([0, 0, 0, 0, 0])
 
 def generate_graph():
     plt.clf() 
-    fig, ax = plt.subplots(figsize=(7, 5))
-    
-    ax.plot(days, absence_counts, marker='o', color='blue')
+    fig, ax = plt.subplots(figsize=(5, 5))
+    ax.plot(days, absence_counts, marker='o', color='black')
     
     ax.set_title("Weekly Attendance")
     ax.set_xlabel("Day")
     ax.set_ylabel("Absences")
     ax.grid(True)
-    ax.set_ylim(0, 10) 
+
+    # --- THE FIX IS HERE ---
+    current_max = np.max(absence_counts)
+    if current_max < 10:
+        ax.set_ylim(0, 10) # Keep it at 10 if numbers are small
+    else:
+        ax.set_ylim(0, current_max + 2) # If Sir goes over 10, expand the paper!
+    # -----------------------
 
     document.getElementById("graph-output").innerHTML = "" 
     display(fig, target="graph-output")
-
-def update_data(event):
-    day = document.getElementById("day-select").value
-    val = document.getElementById("absence-input").value
-    
-    if not val:
-        val = 0
-    
-    for i in range(len(days)):
-        if days[i] == day:
-            absence_counts[i] = int(val)
-    
-    generate_graph()
-
-generate_graph()
